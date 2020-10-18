@@ -17,11 +17,24 @@
         
         <br>
         <h1>List:</h1>
-        <form method="post" action="ShoppingList">
+        <form method="post" action="<c:url value='/ShoppingList'/>">
             <label>Add item:</label>
-            <input type="text" name="itemname" value ="">
+            <input type="text" name="item" value ="">
+            <input type="hidden" name="action" value="add"/>
             <input type="submit" value="Add">
             <br>
         </form>
+            <a>${message}</a>
+            <br>
+            <c:if test="${sessionScope.itemList.size() > 0}">
+                <form action="<c:url value='/ShoppingList'/>" method="post">
+                    <c:forEach var='item' items ="${sessionScope.itemList}">
+                        <input type="radio" name="delete" value="${item}">${item}
+                        <br>
+                    </c:forEach>
+                        <input type="submit" value="delete">
+                        <input type="hidden" name="action" value="delete">
+                </form>
+            </c:if>
     </body>
 </html>

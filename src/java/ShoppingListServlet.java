@@ -2,6 +2,7 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,8 +28,8 @@ public class ShoppingListServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
+        ArrayList<String> itemList = (ArrayList<String>) session.getAttribute("itemList");
         String action = (String)request.getParameter("action");
-        System.out.println(action);
         switch(action){
             case "register":
                 String username = request.getParameter("username");
@@ -40,7 +41,25 @@ public class ShoppingListServlet extends HttpServlet {
                 request.setAttribute("username", username);
                 getServletContext().getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);    
                 }
+                break;
+            case "add":
+                String item = (String) request.getParameter("item");
+                if(!item.equals("")){
+                    if(itemList == null){
+                    itemList = new ArrayList();}
+                    itemList.add(item);
+                    session.setAttribute("itemList", itemList);
+                    getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
+                    
+                } else {
+                    String itemInputNotice = "you need input something as item";
+                    request.setAttribute("message", itemInputNotice);
+                    session.setAttribute("itemList", itemList);
+                    getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
+                }
+                break;
         }
+
        
     }
 
