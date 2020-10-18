@@ -15,13 +15,21 @@ public class ShoppingListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
+        String action =(String) request.getParameter("action"); 
         String user = (String) session.getAttribute("username");
+        if(action != null){
+            session.invalidate();
+            session = request.getSession();
+            String logoutmessage = "you have successfully log out";
+            request.setAttribute("message", logoutmessage);
+            getServletContext().getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
+        }else{
         if(user == null){
             getServletContext().getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
         }else {
             getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
         }
-         
+        }  
     }
 
     @Override
